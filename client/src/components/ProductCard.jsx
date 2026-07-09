@@ -52,44 +52,44 @@ const ProductCard = ({ product }) => {
   return (
     <Link
       to={`/products/${_id}`}
-      className="group flex flex-col h-full bg-white rounded-2xl border border-brand-dark-100 overflow-hidden hover:border-brand-maroon-200 hover:shadow-premium transition-all duration-300 relative"
+      className="group flex flex-col h-full bg-white rounded-[24px] border border-brand-dark-100/60 overflow-hidden hover:border-brand-maroon-200/40 hover:shadow-premium transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] relative hover:-translate-y-1"
     >
-      <span className="absolute top-3 left-3 z-10 px-2 py-0.5 rounded-md bg-white/90 backdrop-blur-sm border border-brand-dark-100 font-sans font-semibold text-[9px] text-brand-maroon-700 tracking-wider uppercase">
+      <span className="absolute top-3.5 left-3.5 z-10 px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-md border border-brand-dark-100/45 font-sans font-bold text-[9px] text-brand-maroon-700 tracking-wider uppercase shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
         {category}
       </span>
 
       {isOutOfStock && (
-        <span className="absolute top-3 right-3 z-10 px-2 py-0.5 rounded-md bg-brand-dark-800 text-white font-sans font-bold text-[9px] uppercase">
+        <span className="absolute top-3.5 right-3.5 z-10 px-2.5 py-1 rounded-lg bg-brand-dark-900/90 backdrop-blur-md text-white font-sans font-black text-[9px] uppercase tracking-wider shadow-[0_4px_12px_rgba(0,0,0,0.15)]">
           Sold Out
         </span>
       )}
       {!isOutOfStock && isLowStock && (
-        <span className="absolute top-3 right-3 z-10 px-2 py-0.5 rounded-md bg-brand-gold-500 text-brand-dark-950 font-sans font-bold text-[9px] uppercase">
+        <span className="absolute top-3.5 right-3.5 z-10 px-2.5 py-1 rounded-lg bg-brand-gold-500 text-brand-dark-950 font-sans font-black text-[9px] uppercase tracking-wider shadow-[0_4px_12px_-2px_rgba(212,175,55,0.35)]">
           {totalStock} Left
         </span>
       )}
 
-      <div className="relative aspect-[4/5] bg-brand-dark-50 overflow-hidden">
+      <div className="relative aspect-[4/5] bg-brand-dark-50/50 overflow-hidden">
         <img
           src={images[0]}
           alt={name}
           loading="lazy"
-          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
         />
 
         {!isOutOfStock && (
           <button
             onClick={handleQuickAdd}
-            className="absolute bottom-3 right-3 p-2.5 bg-brand-maroon-700 hover:bg-brand-maroon-600 text-white rounded-xl shadow-lg translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-10"
+            className="absolute bottom-4 right-4 p-3 bg-brand-maroon-700 hover:bg-brand-maroon-600 text-white rounded-2xl shadow-lg translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-10 hover:scale-105 active:scale-95"
             title="Quick Add to Cart"
           >
-            <ShoppingCart className="w-4 h-4" />
+            <ShoppingCart className="w-4.5 h-4.5" />
           </button>
         )}
       </div>
 
-      <div className="p-4 flex flex-col flex-grow gap-2">
-        <div className="flex items-center gap-1">
+      <div className="p-5 flex flex-col flex-grow gap-2.5">
+        <div className="flex items-center gap-1.5">
           <div className="flex text-brand-gold-500">
             {Array.from({ length: 5 }).map((_, idx) => (
               <Star
@@ -100,7 +100,7 @@ const ProductCard = ({ product }) => {
               />
             ))}
           </div>
-          <span className="font-sans text-[10px] text-brand-dark-400 font-medium">
+          <span className="font-sans text-[10px] text-brand-dark-450 font-semibold">
             {averageRating.toFixed(1)}
           </span>
         </div>
@@ -110,7 +110,7 @@ const ProductCard = ({ product }) => {
         </h3>
 
         <div className="mt-auto pt-1">
-          <span className="font-sans font-bold text-base text-brand-dark-900">
+          <span className="font-sans font-extrabold text-base text-brand-dark-900">
             ₹{price.toLocaleString('en-IN')}
           </span>
         </div>
