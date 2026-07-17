@@ -109,7 +109,8 @@ const AdminAnalytics = () => {
     return period;
   };
 
-  if (loading.analytics && !summary) {
+  const isInitialLoading = (loading.analyticsSummary || loading.analyticsRevenue || loading.analyticsTopProducts) && !summary;
+  if (isInitialLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-3">
         <Loader2 className="w-10 h-10 text-[#d4af37] animate-spin" />
@@ -359,10 +360,10 @@ const AdminAnalytics = () => {
         </div>
         <button
           onClick={loadAnalytics}
-          disabled={loading.analytics}
+          disabled={loading.analyticsSummary || loading.analyticsRevenue || loading.analyticsTopProducts}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white text-xs font-semibold transition-all disabled:opacity-50"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading.analytics ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 ${(loading.analyticsSummary || loading.analyticsRevenue || loading.analyticsTopProducts) ? 'animate-spin' : ''}`} />
           Refresh Data
         </button>
       </div>
@@ -428,7 +429,7 @@ const AdminAnalytics = () => {
               ))}
             </div>
           </div>
-          {loading.analytics ? (
+          {loading.analyticsRevenue ? (
             <div className="flex items-center justify-center h-64">
               <Loader2 className="w-8 h-8 text-[#d4af37] animate-spin" />
             </div>
@@ -443,7 +444,7 @@ const AdminAnalytics = () => {
             <p className="font-sans text-xs text-white/40 mt-0.5">Best sellers by volume (all-time)</p>
           </div>
           <div className="flex-1">
-            {loading.analytics ? (
+            {loading.analyticsTopProducts ? (
               <div className="flex items-center justify-center h-48">
                 <Loader2 className="w-6 h-6 text-[#d4af37] animate-spin" />
               </div>

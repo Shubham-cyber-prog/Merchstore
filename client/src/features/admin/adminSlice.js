@@ -129,7 +129,9 @@ const initialState = {
   loading: {
     products: false,
     orders: false,
-    analytics: false,
+    analyticsSummary: false,
+    analyticsRevenue: false,
+    analyticsTopProducts: false,
   },
   error: {
     products: null,
@@ -261,41 +263,41 @@ const adminSlice = createSlice({
 
       // Fetch Analytics Summary
       .addCase(fetchAnalyticsSummary.pending, (state) => {
-        state.loading.analytics = true;
+        state.loading.analyticsSummary = true;
         state.error.analytics = null;
       })
       .addCase(fetchAnalyticsSummary.fulfilled, (state, action) => {
-        state.loading.analytics = false;
+        state.loading.analyticsSummary = false;
         state.analytics.summary = action.payload.data || null;
       })
       .addCase(fetchAnalyticsSummary.rejected, (state, action) => {
-        state.loading.analytics = false;
+        state.loading.analyticsSummary = false;
         state.error.analytics = action.payload;
       })
 
       // Fetch Revenue Analytics
       .addCase(fetchRevenueAnalytics.pending, (state) => {
-        state.loading.analytics = true;
+        state.loading.analyticsRevenue = true;
       })
       .addCase(fetchRevenueAnalytics.fulfilled, (state, action) => {
-        state.loading.analytics = false;
+        state.loading.analyticsRevenue = false;
         state.analytics.revenue = action.payload.data || { periods: [] };
       })
       .addCase(fetchRevenueAnalytics.rejected, (state, action) => {
-        state.loading.analytics = false;
+        state.loading.analyticsRevenue = false;
         state.error.analytics = action.payload;
       })
 
       // Fetch Top Products Analytics
       .addCase(fetchTopProductsAnalytics.pending, (state) => {
-        state.loading.analytics = true;
+        state.loading.analyticsTopProducts = true;
       })
       .addCase(fetchTopProductsAnalytics.fulfilled, (state, action) => {
-        state.loading.analytics = false;
+        state.loading.analyticsTopProducts = false;
         state.analytics.topProducts = action.payload.data || [];
       })
       .addCase(fetchTopProductsAnalytics.rejected, (state, action) => {
-        state.loading.analytics = false;
+        state.loading.analyticsTopProducts = false;
         state.error.analytics = action.payload;
       });
   },
