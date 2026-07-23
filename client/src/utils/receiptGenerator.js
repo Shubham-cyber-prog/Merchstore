@@ -5,6 +5,11 @@ export const downloadReceipt = (order) => {
     return;
   }
   
+  const subtotalVal = order.subtotal ?? order.totalAmount ?? 0;
+  const discountVal = order.discount ?? order.discountAmount ?? 0;
+  const finalAmountVal = order.finalAmount ?? order.totalAmount ?? 0;
+  const deliveryFeeVal = finalAmountVal - subtotalVal + discountVal;
+  
   const dateStr = new Date(order.createdAt).toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'long',
@@ -48,7 +53,7 @@ export const downloadReceipt = (order) => {
       </div>
     `;
 
-  const deliveryFee = order.totalAmount - order.subtotal + (order.discount || 0);
+  const deliveryFee = deliveryFeeVal;
 
   const receiptHtml = `
     <!DOCTYPE html>
@@ -261,21 +266,21 @@ export const downloadReceipt = (order) => {
             <table class="summary-table">
               <tr>
                 <td>Subtotal</td>
-                <td style="text-align: right; font-weight: 600;">₹${order.subtotal?.toLocaleString('en-IN')}.00</td>
+                <td style="text-align: right; font-weight: 600;">₹${subtotalVal?.toLocaleString('en-IN')}.00</td>
               </tr>
               <tr>
                 <td>Delivery Fee</td>
                 <td style="text-align: right; font-weight: 600;">${deliveryFee === 0 ? 'Free' : '₹' + deliveryFee + '.00'}</td>
               </tr>
-              ${order.discount > 0 ? `
+              ${discountVal > 0 ? `
               <tr style="color: #15803d; font-weight: 600;">
                 <td>Coupon Discount</td>
-                <td style="text-align: right;">- ₹${order.discount?.toLocaleString('en-IN')}.00</td>
+                <td style="text-align: right;">- ₹${discountVal?.toLocaleString('en-IN')}.00</td>
               </tr>
               ` : ''}
               <tr class="total-row">
                 <td>Total Paid</td>
-                <td style="text-align: right;">₹${order.totalAmount?.toLocaleString('en-IN')}.00</td>
+                <td style="text-align: right;">₹${finalAmountVal?.toLocaleString('en-IN')}.00</td>
               </tr>
             </table>
           </div>

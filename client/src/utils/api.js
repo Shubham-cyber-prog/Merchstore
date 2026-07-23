@@ -258,7 +258,12 @@ if (useMock) {
     config.adapter = async (config) => {
       const url = config.url || '';
       const method = (config.method || 'get').toLowerCase();
-      const data = config.data ? JSON.parse(config.data) : null;
+      let data = null;
+      try {
+        data = config.data && typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
+      } catch (err) {
+        data = config.data;
+      }
       
       const getLoggedUser = () => {
         const token = localStorage.getItem('token');
@@ -530,13 +535,25 @@ if (useMock) {
         });
       }
 
+      if (url.includes('/orders/upload-screenshot') && method === 'post') {
+        return simulateRequest(() => {
+          return {
+            status: 200,
+            data: {
+              success: true,
+              url: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=600'
+            }
+          };
+        });
+      }
+
       // 5. ORDER CREATION & TRACKING
       if (url.includes('/orders/create') && method === 'post') {
         return simulateRequest(() => {
           const user = getLoggedUser();
           if (!user) return { error: 'Login required', status: 401 };
 
-          const { address, paymentMethod, couponCode, upiTxnId } = data;
+          const { address, paymentMethod, couponCode, upiTxnId, upiScreenshot } = data;
           const cartKey = `cart_${user.email}`;
           const cartItems = JSON.parse(localStorage.getItem(cartKey) || '[]');
           if (cartItems.length === 0) return { error: 'Cart is empty' };
@@ -601,6 +618,7 @@ if (useMock) {
             status: 'Placed',
             address,
             upiTxnId,
+            upiScreenshot,
             createdAt: new Date().toISOString()
           };
           orders.push(newOrder);

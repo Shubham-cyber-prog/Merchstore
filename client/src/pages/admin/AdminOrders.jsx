@@ -371,6 +371,19 @@ const AdminOrders = () => {
                                         <span className="font-mono font-bold text-brand-dark-700">{order.upiTxnId}</span>
                                       </div>
                                     )}
+                                    {order.upiScreenshot && (
+                                      <div className="text-[10px] mt-1.5">
+                                        <span className="block text-brand-dark-400">Screenshot:</span>
+                                        <a 
+                                          href={order.upiScreenshot} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer" 
+                                          className="text-brand-maroon-700 font-bold hover:underline flex items-center gap-1"
+                                        >
+                                          View Screenshot ↗
+                                        </a>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
 

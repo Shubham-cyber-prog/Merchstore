@@ -43,6 +43,7 @@ const orderSchema = new mongoose.Schema({
   stripePaymentIntentId: { type: String, default: null, sparse: true },
   stripeIdempotencyKey:  { type: String, default: null },
   upiTxnId:              { type: String, default: null, trim: true },
+  upiScreenshot:         { type: String, default: null, trim: true },
 
   status:  { type: String, enum: ORDER_STATUS, default: 'placed' },
   address: { type: addressSnapshotSchema, required: true },

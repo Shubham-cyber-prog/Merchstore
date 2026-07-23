@@ -97,6 +97,11 @@ const OrderConfirm = () => {
   const currentPaymentStatus = (localPaymentStatus || order.paymentStatus || '').toLowerCase();
   const showReceiptButton = currentStatus === 'delivered' && currentPaymentStatus === 'paid';
 
+  const subtotalVal = order.subtotal ?? order.totalAmount ?? 0;
+  const discountVal = order.discount ?? order.discountAmount ?? 0;
+  const finalAmountVal = order.finalAmount ?? order.totalAmount ?? 0;
+  const deliveryFeeVal = finalAmountVal - subtotalVal + discountVal;
+
   const steps = [
     { title: 'Placed', icon: ShoppingBag, desc: 'We have received your order details.' },
     { title: 'Packed', icon: Package, desc: 'Items are sorted and quality checked.' },
@@ -111,7 +116,10 @@ const OrderConfirm = () => {
     const stepIdx = statuses.indexOf(stepTitle.toLowerCase());
 
     if (stepIdx < currentIdx) return 'completed';
-    if (stepIdx === currentIdx) return 'active';
+    if (stepIdx === currentIdx) {
+      if (currentStatus === 'delivered') return 'completed';
+      return 'active';
+    }
     return 'pending';
   };
 
@@ -268,8 +276,8 @@ const OrderConfirm = () => {
                   }
                   if (order.paymentMethod === 'upi') {
                     return (
-                      <>
-                        <span className="text-brand-gold-800 bg-brand-gold-50 px-2 py-0.5 rounded border border-brand-gold-200">
+                      <div className="flex flex-col gap-1.5 items-start">
+                        <span className="text-brand-gold-800 bg-brand-gold-50 px-2 py-0.5 rounded border border-brand-gold-200 font-medium">
                           UPI (Pending Verification)
                         </span>
                         {order.upiTxnId && (
@@ -277,7 +285,17 @@ const OrderConfirm = () => {
                             Ref: {order.upiTxnId}
                           </span>
                         )}
-                      </>
+                        {order.upiScreenshot && (
+                          <a 
+                            href={order.upiScreenshot} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-[10px] text-brand-maroon-750 font-bold hover:underline flex items-center gap-1"
+                          >
+                            View Submitted Screenshot ↗
+                          </a>
+                        )}
+                      </div>
                     );
                   }
                   return (
@@ -297,21 +315,21 @@ const OrderConfirm = () => {
             Payment Breakdown
           </h3>
 
-          <div className="space-y-4 text-xs font-sans font-semibold text-brand-dark-600 flex-grow">
+          <div class="space-y-4 text-xs font-sans font-semibold text-brand-dark-600 flex-grow">
             <div className="flex justify-between">
               <span>Items Total</span>
-              <span className="text-brand-dark-900">₹{order.subtotal?.toLocaleString('en-IN')}.00</span>
+              <span className="text-brand-dark-900">₹{subtotalVal?.toLocaleString('en-IN')}.00</span>
             </div>
             <div className="flex justify-between">
               <span>Delivery Fee</span>
               <span className="text-brand-dark-900">
-                {order.totalAmount - order.subtotal + (order.discount || 0) === 0 ? 'Free' : `₹${order.totalAmount - order.subtotal + (order.discount || 0)}.00`}
+                {deliveryFeeVal === 0 ? 'Free' : `₹${deliveryFeeVal?.toLocaleString('en-IN')}.00`}
               </span>
             </div>
-            {order.discount > 0 && (
+            {discountVal > 0 && (
               <div className="flex justify-between text-green-700 font-bold">
                 <span>Coupon Saved</span>
-                <span>- ₹{order.discount?.toLocaleString('en-IN')}.00</span>
+                <span>- ₹{discountVal?.toLocaleString('en-IN')}.00</span>
               </div>
             )}
 
@@ -320,7 +338,7 @@ const OrderConfirm = () => {
             <div className="flex justify-between items-baseline">
               <span className="font-display font-bold text-sm text-brand-dark-900">Paid Amount</span>
               <span className="font-sans font-black text-xl text-brand-maroon-700">
-                ₹{order.totalAmount?.toLocaleString('en-IN')}.00
+                ₹{finalAmountVal?.toLocaleString('en-IN')}.00
               </span>
             </div>
           </div>

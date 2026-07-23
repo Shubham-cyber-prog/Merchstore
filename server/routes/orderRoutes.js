@@ -5,6 +5,7 @@ const router = require('express').Router();
 const { protect, requireAdmin } = require('../middleware/authMiddleware');
 const { orderLimiter }          = require('../middleware/rateLimiter');
 const validate                  = require('../middleware/validate');
+const { upload }                = require('../utils/cloudinaryUpload');
 const {
   createOrder,
   getUserOrders,
@@ -30,6 +31,21 @@ router.post(
   orderLimiter,                     // 10 req/min per user
   validate(createOrderSchema),
   createOrder
+);
+
+router.post(
+  '/upload-screenshot',
+  protect,
+  upload.single('screenshot'),
+  (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+    res.status(200).json({
+      success: true,
+      url: req.file.path,
+    });
+  }
 );
 
 router.get('/:userId', protect, getUserOrders);

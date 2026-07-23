@@ -177,6 +177,7 @@ const createOrder = asyncHandler(async (req, res) => {
         address:        resolvedAddress,
         stripeIdempotencyKey: paymentMethod === 'stripe' ? idempotencyKey : null,
         upiTxnId:       paymentMethod === 'upi' ? req.body.upiTxnId : null,
+        upiScreenshot:  paymentMethod === 'upi' ? req.body.upiScreenshot : null,
         statusHistory:  [{ status: 'placed', timestamp: new Date(), note: 'Order placed' }],
       };
 

@@ -27,12 +27,16 @@ const createOrderSchema = z.object({
   // Frontend may pass saved addressId to look up instead of full address
   addressId:     objectIdSchema.optional(),
   upiTxnId:      z.string().optional().nullable(),
+  upiScreenshot: z.string().optional().nullable(),
 }).refine(
   (data) => data.address || data.addressId,
   { message: 'Either address object or addressId must be provided', path: ['address'] }
 ).refine(
   (data) => data.paymentMethod !== 'upi' || (data.upiTxnId && /^\d{12}$/.test(data.upiTxnId)),
   { message: 'UPI Transaction ID is required and must be exactly 12 digits for UPI payment', path: ['upiTxnId'] }
+).refine(
+  (data) => data.paymentMethod !== 'upi' || (data.upiScreenshot && data.upiScreenshot.length > 0),
+  { message: 'Payment screenshot is required for UPI payment', path: ['upiScreenshot'] }
 );
 
 /**
